@@ -4,7 +4,7 @@
 
 
 body {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Lato", Helvetica, Arial, sans-serif;
   font-size: 14px;
   color: #444444;
   background-color: white;
@@ -252,7 +252,7 @@ input[type="text"].search {
   text-shadow: none;
   cursor: pointer;
 
-  background-color: #67D6E5;
+  background-color: rgb(31, 119, 180);
   background-image: none;
 
   border: none;
@@ -426,7 +426,7 @@ ul > li.field {
   /*box-shadow: inset 4px 0px rgba(0,0,0,.1);
   -webkit-box-shadow: inset 4px 0px rgba(0,0,0,.1);
   -moz-box-shadow: inset 4px 0px rgba(0,0,0,.1);*/
-  
+
   -webkit-transition: background-color 100ms linear;
    -moz-transition: background-color 100ms linear;
    -o-transition: background-color 100ms linear;
@@ -682,7 +682,7 @@ ul > li.field:first-child {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
-  
+
   -webkit-transition: background-color 100ms linear;
    -moz-transition: background-color 100ms linear;
    -o-transition: background-color 100ms linear;
@@ -738,8 +738,8 @@ input[type="text"].editable {
   -o-transition-delay: 200ms;
   -ms-transition-delay: 200ms;
   transition-delay: 200ms;
-  
-  
+
+
 }
 
 input[type="text"].editable::-webkit-input-placeholder { color:#F8607E; }
@@ -813,7 +813,7 @@ border-top-left-radius: 0px;
 
 
 div[refine-directive] {
-  
+
   z-index: 99999;
 
 
@@ -1164,7 +1164,7 @@ button.close {
   z-index: 100000;
 }
 
-.tooltip-inner { 
+.tooltip-inner {
   -webkit-border-radius:2px;
   -moz-border-radius:2px;
   border-radius:2px;
@@ -1212,4 +1212,48 @@ pre.CodeMirror-placeholder {
 
 .CodeMirror-gutters {
   border: none;
+}
+
+/*
+ * Path tweaks
+ */
+
+/* Hide the number count in facets */
+[data-palladio-facet-filter] .cell-value {
+  display: none;
+}
+
+/* Hide the facet close button */
+i.fa.fa-times{
+  display: none;
+}
+
+/* Handle segments */
+span.segment1, span.segment2, span.segment3, span.segment4, span.segment5, span.segment6 {
+  border-bottom: 2px solid #ccc;
+  padding: 1px;
+}
+span.segment1:hover, span.segment2:hover, span.segment3:hover, span.segment4:hover, span.segment5:hover, span.segment6:hover {
+  border-bottom: 2px solid #4EBDE5;
+}
+
+p#segments {
+  line-height: 26px;
+  overflow-wrap: break-word;
+}
+
+/* About button */
+.navbar-brand {
+  font-family: "Roboto Slab", sans-serif;
+  font-weight: 500;
+}
+
+.btn-default {
+  background: #4EBDE5;
+  color: #333;
+}
+
+.input-group-btn:last-child > .form-control {
+  margin-left: -1px;
+  width: auto;
 }
