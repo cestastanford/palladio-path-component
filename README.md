@@ -1,6 +1,8 @@
 # palladio-path-component
+
 A component for illustrating paths
 
+![Paths](preview.png)
 
 To get started running the example, from your command line, do the following
 
