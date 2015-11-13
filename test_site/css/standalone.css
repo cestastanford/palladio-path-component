@@ -1229,12 +1229,22 @@ i.fa.fa-times{
 }
 
 /* Handle segments */
-span.segment1, span.segment2, span.segment3, span.segment4, span.segment5, span.segment6 {
+/*span.segment1, span.segment2, span.segment3, span.segment4, span.segment5, span.segment6 {
   border-bottom: 2px solid #ccc;
   padding: 1px;
 }
 span.segment1:hover, span.segment2:hover, span.segment3:hover, span.segment4:hover, span.segment5:hover, span.segment6:hover {
   border-bottom: 2px solid #4EBDE5;
+  background: #f2f2f2;
+}*/
+
+.hover-off {
+  border-bottom: 2px solid #ccc;
+  padding: 1px;
+}
+.hover-on {
+  border-bottom: 2px solid #4EBDE5;
+  background: #f2f2f2;
 }
 
 p#segments {
