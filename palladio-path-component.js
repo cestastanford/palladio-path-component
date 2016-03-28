@@ -1,5 +1,4 @@
-// Facet filter module
-
+// Path component module
 // Most code based on http://bl.ocks.org/hepplerj/e5d3d5787f348cc3b032
 
 angular.module('palladioPathView', ['palladio', 'palladio.services'])
@@ -32,15 +31,12 @@ angular.module('palladioPathView', ['palladio', 'palladio.services'])
 
 				post : function(scope, element, attrs) {
 					// Anything that touches the DOM happens here.
-
 					var fullData, filteredData;
-
 					var xfilter = dataService.getDataSync().xfilter;
-
 					if(xfilter === undefined) { return; }
-
 					var dummyDim = xfilter.dimension(function(d) { return true; });
 
+					// Layout
 					var width   = 960,
 					    height  = 200,
 					    margin  = 20,
@@ -48,6 +44,7 @@ angular.module('palladioPathView', ['palladio', 'palladio.services'])
 					    padding = 10,
 					    radius  = 6,
 					    yfixed  = pad + radius;
+					var color = d3.scale.ordinal().range(["#9BDFA1", "#746862", "#DA6761", "#A75F3A", "#53A73A"]); //d3.scale.category20();
 
 					// Legend variables
 					var legend_x = 0,
@@ -59,21 +56,24 @@ angular.module('palladioPathView', ['palladio', 'palladio.services'])
 					    key_x = 16,
 					    mapped_y = legend_y + legend_height - 90;
 
-					var color = d3.scale.category20();
-
 					// Tooltip
 					var tooltip = d3.select("body").append("div")
 					  .classed("tooltip", true)
 					  .classed("hidden", true);
 
+					// Text selection
 					var text_opts = {
+						"selectText": {
+							"field": "selectText",
+							"label": "Select Text"
+						},
 					  "tangPoem": {
 					    "field": "tangPoem",
-					    "label": "Tang poem"
+					    "label": "Wang Wei, 'Parting'"
 					  },
 					  "poem2": {
-					    "field": "poem2",
-					    "label": "Poem 2"
+					    "field": "madmanPoem",
+					    "label": "Lu Xun, 'Diary of a Madman'"
 					  }
 					};
 

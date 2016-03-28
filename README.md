@@ -6,7 +6,7 @@ A component for illustrating paths
 
 To get started running the example, from your command line, do the following
 
-If you don't have bower, install it: http://bower.io/#install-bower
+If you don't have bower, install it: <http://bower.io/#install-bower>
 
 Then:
 
@@ -17,4 +17,4 @@ bower install
 python -m SimpleHTTPServer
 ```
 
-Then open http://localhost:8000/test_site/ in a browser.
+Then open [http://localhost:8008/test_site/](http://localhost:8008/test_site/) in a browser.
