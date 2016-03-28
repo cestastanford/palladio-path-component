@@ -19,8 +19,8 @@ angular.module('palladioPathView', ['palladio', 'palladio.services'])
 
 			},
 			template : '<div id="main">' +
-						'<div id="chart"></div>' +
-						'</div>',
+								 '<div id="chart"></div>' +
+								 '</div>',
 			link : {
 				pre : function(scope, element) {
 					scope.data = {
@@ -104,7 +104,7 @@ angular.module('palladioPathView', ['palladio', 'palladio.services'])
 					    .attr("id", "wrapper")
 					    .attr("transform", "translate(" + padding + ", " + padding + ")");
 
-					  // count the paths
+					  // count the paths, used for sizing links
 					  graph.links.forEach(function(d,i) {
 					    var pathCount = 0;
 					    for (var j = 0; j < i; j++) {
@@ -115,11 +115,6 @@ angular.module('palladioPathView', ['palladio', 'palladio.services'])
 					    }
 					    d.pathCount = pathCount;
 					  });
-
-					  // // Create the unique identifiers for the links
-					  // graph.links.forEach(function(d,i) {
-
-					  // });
 
 					  // fix graph links to map to objects
 					  graph.links.forEach(function(d,i) {
@@ -168,18 +163,6 @@ angular.module('palladioPathView', ['palladio', 'palladio.services'])
 					    .attr("fill","#ffffff")
 					    .style("stroke", function(d, i) { return color(d.tokenType); });
 
-					  // Handling mouseover functions
-					  // nodeEnter.selectAll(".node")
-					  //   .on("mousemove", function(d, i) {
-					  //     var mouse = d3.mouse(d3.select("body").node());
-					  //     tooltip
-					  //       .classed("hidden", false)
-					  //       .attr("class", "tooltip")
-					  //       .attr("style", "left:" + (mouse[0] + 20) + "px; top:" + (mouse[1] - 50) + "px")
-					  //       .html(tooltipText(d));
-					  //   });
-					    // .on("mouseover", nodeOver);
-
 					  nodeEnter.append("text")
 					    .style("text-anchor", "middle")
 					    .attr("dx", function(d) { return d.x; })
@@ -226,31 +209,19 @@ angular.module('palladioPathView', ['palladio', 'palladio.services'])
 					    .attr("stroke-opacity","0.5")
 					    .style("stroke-width", function(d) { return (2 + d.pathCount); });
 					}
-
-					function tooltipText(d) {
-					 return "<h5>Information for " + d.token + "</h5>" +
-					   "<table>" +
-					   "<tr>" +
-					   "<td class='field'>Token: </td>" +
-					   "<td>" + d.token + "</td>" +
-					   "</tr>" +
-					   "<tr>" +
-					   "<td class='field'>Dialect: </td>" +
-					   "<td>" + d.dialect + "</td>" +
-					   "</tr>" +
-					   "<tr>" +
-					   "<td class='field'>IME: </td>" +
-					   "<td>" + d.input_method + "</td>" +
-					   "</tr>" +
-					   "<tr>" +
-					   "<td class='field'>Operating System: </td>" +
-					   "<td>" + d.operating_system + "</td>" +
-					   "</tr>" +
-					   "<tr>" +
-					   "<td class='field'>Trial: </td>" +
-					   "<td>" + d.trial + "</td>" +
-					   "</tr>" +
-					   "</table>";
+					
+					function classedOverState() {
+						d3.selectAll("#segment")
+						.on("mouseover", function(d, i) {
+							d3.select(this)
+								.classed("hover-on", true)
+								.classed("hover-off", false);
+						})
+						.on("mouseout", function(d, i) {
+						d3.selectAll("#segment")
+								.classed("hover-off", true)
+								.classed("hover-on", false);
+						});
 					}
 
 					// Field selector
@@ -263,6 +234,13 @@ angular.module('palladioPathView', ['palladio', 'palladio.services'])
 						  .attr("value", key)
 						  .text(text_opts[key].label);
 						}
+					}
+
+					function update_selection_view() {
+						// Remove SVG if it already exists (this is a very inefficient way to handle updates...)
+					  if(!d3.select(element[0]).select("svg").empty()) {
+					    d3.select(element[0]).select("svg").remove();
+					  }
 					}
 
 					function shallowCopy(obj) {
@@ -384,13 +362,13 @@ angular.module('palladioPathView', ['palladio', 'palladio.services'])
 					}
 
 					function initialize() {
-
+						create_field_selector();
+						classedOverState();
 					}
 
 					function update() {
 						buildNodesAndLinks();
 						arcDiagram(scope.data);
-						create_field_selector();
 					}
 				}
 			}

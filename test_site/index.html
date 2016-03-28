@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8">
-        <title>Palladio-based standalone example</title>
+        <title>Chinese Computing</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,300' rel='stylesheet' type='text/css'>
@@ -47,17 +47,19 @@
 
         <div class="row-fluid" id="text-comparison">
             <div id="facet-text" style="width: 35%; float: left;" class="col-lg-10 col-md-10 col-xs-10 col-lg-offset-1 col-md-offset-1 col-xs-offset-1">
-                <h3>Original</h3>
-                <p id="segments"><span class="segment1 hover-off">下馬飲君酒</span>，
-                   <span id="segment" class="segment2 hover-off">問君何所之</span>？
-                   <span id="segment" class="segment3 hover-off">君言不得意</span>，
-                   <span id="segment" class="segment4 hover-off">歸臥南山陲</span>。</br>
-                   <span id="segment" class="segment5 hover-off">但去莫復問</span>，
-                   <span id="segment" class="segment6 hover-off">白雲無盡時</span>。</p>
+                <h4>Original</h4>
+                <p id="segments">
+                   <span id="segment" class="hover-off">下馬飲君酒</span>，
+                   <span id="segment" class="hover-off">問君何所之</span>？
+                   <span id="segment" class="hover-off">君言不得意</span>，
+                   <span id="segment" class="hover-off">歸臥南山陲</span>。</br>
+                   <span id="segment" class="hover-off">但去莫復問</span>，
+                   <span id="segment" class="hover-off">白雲無盡時</span>。</p>
             </div>
             <div id="facet-text" style="width: 40%; float: left;" class="col-lg-10 col-md-10 col-xs-10 col-lg-offset-1 col-md-offset-1 col-xs-offset-1">
-                <h3>Translation</h3>
-                <p id="segments"><span class="segment1 hover-off">Dismount the horse and have some wine</span> /
+                <h4>Translation</h4>
+                <p id="segments">
+                    <span id="segment" class="segment1 hover-off">Dismount the horse and have some wine</span> /
                     <span id="segment" class="segment2 hover-off">I ask, to where are you going?</span> /
                     <span id="segment" class="segment3 hover-off">You say you cannot guess</span> /
                     <span id="segment" class="segment4 hover-off">And will rest at the foot of the Southern Mountain</span> /
@@ -114,6 +116,22 @@
 
                 components.add('character-path', "#path-view-here");
             });
+            
+            var component2 = startPalladio(['palladioTextView']);
+            
+            component2.loadData('text_table.palladio.json', function() {
+              components.add('facet', "#facet-filter-here", {
+                    height: "300px",
+                    showControls: false,
+                    showSettings: false,
+                    showAccordion: false,
+                    showDropArea: false,
+                    dimensions: components.dimensions().filter(function(d) { return ["chinese", "english"].indexOf(d.key) !== -1; })
+                });
+            });
+            
+            component2.add('character-path', '#text-view')
+            console.log(component2)
         </script>
 
     </body>

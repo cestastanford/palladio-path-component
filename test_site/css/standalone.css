@@ -1245,6 +1245,7 @@ span.segment1:hover, span.segment2:hover, span.segment3:hover, span.segment4:hov
 .hover-on {
   border-bottom: 2px solid #4EBDE5;
   background: #f2f2f2;
+  padding: 1px;
 }
 
 p#segments {
@@ -1256,6 +1257,10 @@ p#segments {
 .navbar-brand {
   font-family: "Roboto Slab", sans-serif;
   font-weight: 500;
+}
+
+.navbar-default {
+  background: #f8f8f8;
 }
 
 .btn-default {
