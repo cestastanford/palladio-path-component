@@ -1,0 +1,171 @@
+---
+title: "Chinese Computing - Development Documentation"
+always_allow_html: yes
+css:
+- tufte.css
+- custom.css
+output:
+  html_document: default
+keywords: d3.js, Palladio, data visualization, pinyin, history of computing, history
+  of China
+abstract: This document outlines the work completed and planned for the Chinese Computing
+  Digital History Project led by Dr. Tom Mullaney, Stanford University, with initial
+  visualization work by Dr. Jason A. Heppler, Stanford University.
+---
+
+# Overview
+
+The most recent version of the files for the path visualization are contained in the repository: <https://github.com/hepplerj/palladio-path-component>
+
+Early work on path visualization can be found at the following repository: <https://github.com/cestastanford/chinese_input>
+
+The current set of visualizations are at: <http://digitalhistory.stanford.edu/projects/tmullaney/chinesecomputing/>
+
+As points of reference, you may wish to contact Palladio Project Director [Nicole Coleman](https://profiles.stanford.edu/nicole-coleman) or Lead Developer [Ethan Jewett](http://esjewett.com/).
+
+# Getting Started
+
+To start the application, from the command line:
+
+```
+git clone https://github.com/humanitiesplusdesign/palladio-path-component.git
+cd palladio-path-component
+bower install
+python -m SimpleHTTPServer
+```
+
+Then point your browser to <http://localhost:8008/test_site/>.
+
+# Workflow 
+
+The workflow, thus far, for preparing and visualizing the data is rather involved. The general workflow looks like this.
+
+```{r echo=FALSE, error=FALSE, warning=FALSE, fig.height=2}
+library(DiagrammeR)
+grViz(width = "100%", diagram = "
+      digraph nicegraph {
+      graph [overlap = true,
+             rankdir = LR,
+             label = <The workflow for<br/>data preparation and visualization<br/><br/>>,
+             fontname = ETBembo,
+             labelloc = 't'
+]
+
+      node [shape = box,
+           overlap = true,
+           fontname = ETBembo,
+           fontsize = 10]
+      A [label = 'Retrieve raw typing \n as plain text']
+      G [label = 'Identify I/F/S/D \n using Python']
+      B [label = 'Clean/tidy data \n using R']
+      C [label = 'Import cleaned data \n to Palladio']
+      D [label = 'Download Palladio data']
+      E [label = 'Upload Palladio data \n to the server']
+      F [label = 'Explore the visualization']
+
+      A->G->B->C->D->E->F [splines = 'line']
+      C->B [splines = 'curved']
+      }
+      ")
+```
+
+## Retrieving raw typing as plain text
+
+Once typing input is captured, the first step in our workflow is to break down the text into its Pinyin components and identify these as *initial*, *final*, *selection*, or *productive delete*. In the [chinese_input](https://github.com/cestastanford/chinese_input) repository,  the script `tokenizer_from_reference.py` handles the breakdown into Pinyin from a dictionary file called `wordfile.txt`. The Python script takes in a string of characters from the typing log and, referencing against the `wordfile`, breaks down the undifferentiated string into its Pinyin parts.
+
+From here, the data was then cleaned by hand in Google Spreadsheets and broke down the Pinyin into a variety of characters (see, for example, the breakdown of the [Madman poem](https://github.com/cestastanford/chinese_input/blob/master/csv/Madman_Segment5.csv).) The columns included here are `Trial_Name`, which is a unique identifier for each trial, `Trial_ID`, `Trial_SESSION`, `Trial_Trial`, `Trial_Text`, `Keylog_CLEAN`, `IME`, `OS`, `AGE`, `DIALECT`, `GENDER`, `CharacterType`, `TrialDate`, and several columns numbered sequentially indicating the initial, final, or selection of keystrokes.
+
+For clarity, *session* may contain multiples *trials*.
+
+Column Type   | Description 
+------------- | -----------------
+Trial_Name    | A unique ID
+Trial_ID      | A unique ID
+Trial_SESSION | A session number for the session
+Trial_Trial   | A trial number for the session
+Trial_Text    | The text used for typing during the trial
+Keylog_CLEAN  | The keylog of the trial, uncleaned
+IME           | The input editor used by the user
+OS            | The operating system used by the user
+AGE           | The age range of the user
+DIALECT       | The dialect used by the user
+GENDER        | The gender of the user
+CharacterType | The character type
+TrialDate     | The date of the trial
+
+## Clean/tidy data using R
+
+Once this table is created, we rely on another script called `tidy.R` inside the [chinese_input](https://github.com/cestastanford/chinese_input/) repository. `tidy` is an R script that reads in the spreadsheet, drops some of the rows and columns we won't need, and converts the data from a wide format to a long format. Compare, for example, the [un-tidy Madman segment 5](https://github.com/cestastanford/chinese_input/blob/master/csv/Madman_Segment5.csv) with the [tidy Madman segment 5](https://github.com/cestastanford/chinese_input/blob/master/csv/madmantextseg5.csv).
+
+Each segment of the poem is run through the `tidy.R` script in order to prepare the data for [Palladio](http://hdlab.stanford.edu/palladio/). Currently, these are separate files but, as the project moves forward, should be merged into a single data table to allow easier filtering and visualization. 
+
+## Import cleaned data to Palladio
+
+Since we are relying on Palladio components in the `palladio-path-component` visualization, we need to have the data converted into a Palladio datafile in order to visualize the information. Once `tidy.R` returns clean CSV files, those CSV files are [uploaded into Palladio](http://hdlab.stanford.edu/palladio-app/#/upload). Once uploaded, we have the opportunity to check the data for any extra cleaning, which must be done outside of Palladio, before we download the `.palladio` JSON file.
+
+We are now ready to include the data in our visualization.
+
+## Explore the visualization
+
+The [palladio-path-component](https://github.com/hepplerj/palladio-path-component) repository contains our visualization. Currently, the Chinese Input visualization draws on data inside the `test_site` directory of the [repository](https://github.com/hepplerj/palladio-path-component). Inside of `test_site` is a `.json` file called `sample.json`, which is the Palladio JSON file downloaded in the previous section. 
+
+If this file is renamed for any reason, the filename must also be changed in the [index.html](https://github.com/hepplerj/palladio-path-component/blob/master/test_site/index.html) file inside `test_site` on line 95 when calling to load the data:
+
+`components.loadData('sample.palladio.json', function() {`
+
+When the files are ready, you can run the visualization locally from the command line by running `python -m SimpleHTTPServer` and visiting <http://localhost:8008/test_site/>.
+
+# Proposed Next Steps
+
+## Selection of texts and segments
+
+One of the key components of the visualization that needs work is the user interactions for selecting which texts and segments to view in the visualization. We are currently displaying these as individual selections, but a better interface would allow users to select text and segment without leaving the visualization interface (and, thus, also allow comparisons across texts). There are possibly several ways to address the technical challenge, and certainly one approach would be developing a second Palladio component---for example, a `palladio-text-selection-component`---to help handle the data selection and pass that to the visualization for further analysis and filtering.
+
+This should probably be top priority once work resumes on the visualization, and will likely be easily tackled by a good JavaScript developer with experience using AngularJS.
+
+## A unified data preparation-to-visualization workflow
+
+The process of uncleaned data to visualization is rather clunky and takes place across multiple platforms and programming languages.
+
+```{r echo=FALSE, fig.height=2, warning=FALSE, error=FALSE}
+library(DiagrammeR)
+grViz(width = "100%", diagram = "
+      digraph nicegraph {
+      graph [overlap = true,
+             rankdir = LR,
+             label = <Data preparation complexity<br/><br/>>,
+             fontname = ETBembo,
+             labelloc = 't'
+]
+
+      node [shape = box,
+           overlap = true,
+           fontname = ETBembo,
+           fontsize = 10]
+      A [label = '.txt: \n Raw keylogging data']
+      B [label = '.txt: \n Pinyin converted data']
+      C [label = 'Google: \n Data sent to Spreadsheet \n for by-hand markup']
+      D [label = '.csv: \n Google Spreadsheet \n downloaded']
+      E [label = '.csv: \n New CSV created from \n R tidy cleanup']
+      F [label = '.json: \n CSV uploaded to Palladio \n and converted to JSON']
+
+      A->B->C->D->E->F [splines = 'line']
+      }
+      ")
+```
+
+**Raw keylogging data**: The raw data comes from keylogging trials and is output as `.txt`. Some by-hand cleanup is still done to correct areas where typists tried to correct mistakes as they input text. The raw text comes back as a long, single string of text that must be split up into its Pinyin segments and identified as `initial`, `final`, `selection`, or `productive delete`.  
+
+**Pinyin converted data**: The single string of keylogged data is run through a Python script using a Pinyin dictionary to identify words in the string and break those words into their individual tokens.
+
+**Data to Google Spreadsheets for markup**: Currently, the resulting converstion of undifferentiated text into Pinyin strings is then marked up by hand to identify `initial`, `final`, `selection`, and `productive delete`, as well as providing additional metadata about the trial participant. See the above section "Retrieving raw typing as plain text" for a description of this metadata.
+
+**CSV creation from** `tidy.R`: Once the markup in Google Spreadsheet is completed, we must tidy the data first by dropping certain columns and rows that are not necessary, and then convert the wide-format table into a long-format table for easier data analysis and manipulation. The resulting `.csv` files from tidying the data is then ready for conversion by Palladio.
+
+**CSV conversion to** `.json`: Finally, tidy data is uploaded to Palladio, double-checked for any data issues, and downloaded as a `.json` file ready for visualization.
+
+A cleaner workflow would allow two key advantages. First, the process, ideally, could be shortened to go from the raw `.txt` keylogging straight to `.json` without the need for Python or R along the way. The scripts we currently use for data preparation and cleanup could be ported to JavaScript so the entire process could be handled within the browser, or, if by-hand markup in a spreadsheet is still needed, would still simplify the process from text-to-Palladio significantly. Second, achieving an easier workflow of `.txt`-to-`.json` in the browser would lend itself to another goal of the project: allowing users to input their own typings and compare that against the trials. Since we cannot expect users to deal with their own data preparation, nor, ideally, should that fall on the shoulders of the project lead, an ideal workflow would handle the process from start to finish within the browser.
+
+## User-contributed trials
+
+Another enhancement of the project is the desire to allow user-generated trials to be added to the platform. Ideally, this system would not only allow a user to compare their typing against the trails, but would be added to a database to serve as a large collection of trials and compare input across a wide range of users, texts, dialects, and so on. This would further enhance the analytical capabilities of the platform by allowing researchers to more fully explore a deeper range of input styles, as well as collect useful statistics on input editors.
